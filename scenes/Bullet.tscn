@@ -1,0 +1,86 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://assets/sounds/gunShot.wav" type="AudioStream" id=1]
+[ext_resource path="res://scripts/BulletNode.cs" type="Script" id=2]
+
+[sub_resource type="Gradient" id=1]
+colors = PoolColorArray( 1, 0.678431, 0, 0.454902, 0.960784, 1, 0.596078, 0.513726 )
+
+[sub_resource type="Animation" id=2]
+resource_name = "Shoot"
+length = 0.2
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath("BulletPath:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.02, 0.18, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("GunShotSound:playing")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.19 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("BulletEndParticle:emitting")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+
+[sub_resource type="ParticlesMaterial" id=3]
+flag_disable_z = true
+spread = 180.0
+gravity = Vector3( 0, 98, 0 )
+initial_velocity = 200.0
+initial_velocity_random = 0.2
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 3.0
+scale_random = 1.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="BulletNode" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="BulletPath" type="Line2D" parent="."]
+modulate = Color( 1, 1, 1, 0 )
+width = 1.0
+default_color = Color( 1, 1, 1, 1 )
+gradient = SubResource( 1 )
+antialiased = true
+
+[node name="BulletAnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Shoot = SubResource( 2 )
+
+[node name="BulletEndParticle" type="Particles2D" parent="."]
+emitting = false
+lifetime = 0.1
+one_shot = true
+explosiveness = 1.0
+randomness = 1.0
+visibility_rect = Rect2( -10, -10, 10, 10 )
+process_material = SubResource( 3 )
+
+[node name="GunShotSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 1 )
+volume_db = -10.0
