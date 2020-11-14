@@ -19,6 +19,16 @@ public class BulletNode : Node2D
 		bulletAnimationPlayer.Play("Shoot");
 		
 	}
+	
+	public void shoot(Vector2 start, Vector2 end) {
+		
+		bulletPath.ClearPoints();
+		bulletPath.AddPoint(start);
+		bulletPath.AddPoint(end);
+		particles2D.Position = end;
+		bulletAnimationPlayer.Play("Shoot");
+		
+	}
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{

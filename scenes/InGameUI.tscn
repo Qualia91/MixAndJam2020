@@ -30,12 +30,53 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="RoundState" type="Label" parent="."]
+margin_left = 512.0
+margin_top = 20.0
+margin_right = 512.0
+margin_bottom = 81.0
+grow_horizontal = 2
+rect_pivot_offset = Vector2( -3325.28, -340.44 )
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0.0862745, 0.560784, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/line_spacing = 5
+custom_constants/shadow_offset_y = 1
+custom_constants/shadow_as_outline = 0
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="RoundLabel" type="Label" parent="."]
 margin_left = 1004.0
 margin_top = 20.0
 margin_right = 1004.0
 margin_bottom = 81.0
 grow_horizontal = 0
+rect_pivot_offset = Vector2( -3325.28, -340.44 )
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0.0862745, 0.560784, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/line_spacing = 5
+custom_constants/shadow_offset_y = 1
+custom_constants/shadow_as_outline = 0
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpendingMoneyLabel" type="Label" parent="."]
+margin_left = 512.0
+margin_top = 500.0
+margin_right = 512.0
+margin_bottom = 561.0
+grow_horizontal = 2
+grow_vertical = 0
 rect_pivot_offset = Vector2( -3325.28, -340.44 )
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )

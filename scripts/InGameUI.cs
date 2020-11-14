@@ -6,12 +6,24 @@ public class InGameUI : Node2D
 	
 	private Label enemiesLeftLabel;
 	private Label roundLabel;
+	private Label spendingMoneyLabel;
+	private Label roundState;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		this.enemiesLeftLabel = GetNode<Label>("EnemiesLeftLabel");
 		this.roundLabel = GetNode<Label>("RoundLabel");
+		this.spendingMoneyLabel = GetNode<Label>("SpendingMoneyLabel");
+		this.roundState = GetNode<Label>("RoundState");
+	}
+	
+	public void SetRoundState(RoundState roundState) {
+		if (roundState == RoundState.TOWER_DEFENCE) {
+			this.roundState.Text = "BUILD";
+		} else {
+			this.roundState.Text = "SHOOT";
+		}
 	}
 	
 	public void SetEnemiesLeft(int enemiesLeft) {
@@ -21,10 +33,9 @@ public class InGameUI : Node2D
 	public void SetRound(int round) {
 		this.roundLabel.Text = "Round: " + round;
 	}
+	
+	public void SetSpendingMoney(int money) {
+		this.spendingMoneyLabel.Text = "Spending Money: " + money;
+	}
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
 }

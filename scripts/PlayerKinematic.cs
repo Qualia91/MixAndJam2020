@@ -15,6 +15,7 @@ public class PlayerKinematic : KinematicBody2D
 	private Particles2D bloodParticles;
 	private Camera2D camera2D;
 	private RayCast2D rayCast2D;
+	private TileMap tileMap;
 	private InGameUI inGameUI;
 	
 	private AudioStreamPlayer2D[] crunchSounds = new AudioStreamPlayer2D[4];
@@ -40,6 +41,11 @@ public class PlayerKinematic : KinematicBody2D
 	
 	private bool dead = false;
 	
+	private RoundState roundState = RoundState.TOP_DOWN;
+	private TurretCreator turretCreatorNode;
+	
+	private int spendingMoney = 100;
+	
 	public override void _Ready()
 	{
 		sprite = GetNode<AnimatedSprite>("Sprite");
@@ -56,6 +62,7 @@ public class PlayerKinematic : KinematicBody2D
 		healthBar = GetNode<HealthBar>("HealthBarNode");
 		
 		this.inGameUI = GetNode<InGameUI>("Camera2D/HudLayer/UI");
+		this.tileMap = GetNode<TileMap>("../Navigation2D/TileMap");
 		
 		this.bulletNodes = new BulletNode[maxBullets];
 				
@@ -66,6 +73,13 @@ public class PlayerKinematic : KinematicBody2D
 		
 			bulletNodes[i] = bulletInstance;
 		}
+		
+		inGameUI.SetSpendingMoney(spendingMoney);
+	}
+	
+	public void AddTurret(TurretCreator turretCreatorNode) {
+		this.turretCreatorNode = turretCreatorNode;
+		turretCreatorNode.SetPlayer(this);
 	}
 	
 	public void SetEnemiesLeft(int enemiesLeft) {
@@ -74,6 +88,14 @@ public class PlayerKinematic : KinematicBody2D
 	
 	public void SetRound(int round) {
 		inGameUI.SetRound(round);
+	}
+	
+	public void SetRoundState(RoundState roundState) {
+		this.roundState = roundState;
+		inGameUI.SetRoundState(roundState);
+		if (roundState == RoundState.TOP_DOWN) {
+			turretCreatorNode.Visible = false;
+		}
 	}
 	
 	private void shoot() {
@@ -100,6 +122,35 @@ public class PlayerKinematic : KinematicBody2D
 		}
 		
 	}
+	
+	public override void _Input(InputEvent @event)
+	{
+		if (roundState == RoundState.TOWER_DEFENCE) {
+			// Mouse in viewport coordinates.
+			if (@event is InputEventMouseButton eventMouseButton) {
+				int tile = tileMap.GetCellv(tileMap.WorldToMap(GetGlobalMousePosition()));
+				if (tile == 0) {
+					Vector2 pos = GetGlobalMousePosition();
+					var posXDiff = pos.x % 64;
+					var posYDiff = pos.y % 64;
+					if (pos.x < 0) posXDiff += 64;
+					if (pos.y < 0) posYDiff += 64;
+					turretCreatorNode.ShowOptions(this);
+					turretCreatorNode.Position = pos - new Vector2(posXDiff, posYDiff);
+					turretCreatorNode.Visible = true;
+				}
+			}
+		}
+	}
+	
+	public int GetSpendingMoney() {
+		return spendingMoney;
+	}
+	
+	public void Spend(int spend) {
+		this.spendingMoney -= spend;
+		inGameUI.SetSpendingMoney(spendingMoney);
+	}
 
 	public void GetInput(float dt)
 	{
@@ -118,11 +169,16 @@ public class PlayerKinematic : KinematicBody2D
 			_velocity.x += 1;
 		} 
 		
-		if (Input.IsActionPressed("shoot")) {
-			shoot();
-			speed = shootingSpeed;
-		} else {
+		if (roundState == RoundState.TOWER_DEFENCE) {
 			speed = normalSpeed;
+			
+		} else {
+			if (Input.IsActionPressed("shoot")) {
+				shoot();
+				speed = shootingSpeed;
+			} else {
+				speed = normalSpeed;
+			}
 		}
 		
 		SetAnimation(_velocity);
@@ -168,16 +224,16 @@ public class PlayerKinematic : KinematicBody2D
 		return a;
 	}
 
-  // Called every frame. 'delta' is the elapsed time since the previous frame.
-  public override void _PhysicsProcess(float delta)
-  {
-	
-	if (!dead) {
-		GetInput(delta);
-		MoveAndSlide(_velocity);
+	// Called every frame. 'delta' is the elapsed time since the previous frame.
+	public override void _PhysicsProcess(float delta)
+	{
+
+		if (!dead) {
+			GetInput(delta);
+			MoveAndSlide(_velocity);
+		}
+
 	}
-	
-  }
 
 	public void TakeDamage(float damage) {
 		if (!dead) {

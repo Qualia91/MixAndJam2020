@@ -25,7 +25,7 @@ public class Enemy : KinematicBody2D
 	private int damageTakenNodesIndex = 0;
 	private EnemyDamageTaken[] damageTakenNodes;
 	private float maxHealth = 100;
-	private float currentHealth = 100;
+	private float currentHealth;
 	private bool isUp = false;
 	private bool dead = false;
 	private bool toRemove = false;
@@ -52,6 +52,11 @@ public class Enemy : KinematicBody2D
 		GetPath();
 	}
 	
+	public void SetDifficulty(int round) {
+		maxHealth = maxHealth + (round * round);
+		currentHealth = maxHealth;
+	}
+	
 	public void TakeDamage(float damage) {
 		damageTakenNodes[damageTakenNodesIndex].action();
 		
@@ -65,6 +70,10 @@ public class Enemy : KinematicBody2D
 		if (damageTakenNodesIndex >= damageTakenNodesCount) {
 			damageTakenNodesIndex = 0;
 		}
+	}
+	
+	public bool IsDead() {
+		return this.dead;
 	}
 	
 	public void death() {
