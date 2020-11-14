@@ -8,7 +8,7 @@ public class EnemyDamageTaken : Node2D
 
 	public void action() {
 		
-		particles2D.Position = new Vector2(rnd.Next(10) - 5, rnd.Next(30) - 15);
+		particles2D.Position = new Vector2(rnd.Next(15) - 7.5f, rnd.Next(30) - 15);
 		particles2D.Emitting = true;
 		
 	}

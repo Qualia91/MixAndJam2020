@@ -6,13 +6,16 @@ public class PlayerKinematic : KinematicBody2D
 	
 	PackedScene BulletScene = (PackedScene) ResourceLoader.Load("res://scenes/Bullet.tscn");
 		
-	public int Speed = 100;
+	public int normalSpeed = 300;
+	public int shootingSpeed = 150;
+	public int speed = 100;
 	private Vector2 _velocity = new Vector2();
 	private AnimatedSprite sprite;
 	private CollisionShape2D collisionShape2D;
 	private Particles2D bloodParticles;
 	private Camera2D camera2D;
 	private RayCast2D rayCast2D;
+	private InGameUI inGameUI;
 	
 	private AudioStreamPlayer2D[] crunchSounds = new AudioStreamPlayer2D[4];
 
@@ -23,6 +26,9 @@ public class PlayerKinematic : KinematicBody2D
 	private bool shooting = false;
 	private int bulletIndex = 0;
 	private int maxBullets = 10;
+	private float maxHealth = 100;
+	private float currentHealth = 100;
+	private HealthBar healthBar;
 	
 	private BulletNode[] bulletNodes;
 	
@@ -31,6 +37,8 @@ public class PlayerKinematic : KinematicBody2D
 	private float lastFireTime = 0;
 	
 	private int bulletSpread = 40;
+	
+	private bool dead = false;
 	
 	public override void _Ready()
 	{
@@ -45,6 +53,10 @@ public class PlayerKinematic : KinematicBody2D
 		crunchSounds[3] = GetNode<AudioStreamPlayer2D>("sounds/CrunchSoundFour");
 		rayCast2D = GetNode<RayCast2D>("RayCast2D");
 		
+		healthBar = GetNode<HealthBar>("HealthBarNode");
+		
+		this.inGameUI = GetNode<InGameUI>("Camera2D/HudLayer/UI");
+		
 		this.bulletNodes = new BulletNode[maxBullets];
 				
 		for (int i = 0; i < maxBullets; i++) {
@@ -56,18 +68,29 @@ public class PlayerKinematic : KinematicBody2D
 		}
 	}
 	
+	public void SetEnemiesLeft(int enemiesLeft) {
+		inGameUI.SetEnemiesLeft(enemiesLeft);
+	}
+	
+	public void SetRound(int round) {
+		inGameUI.SetRound(round);
+	}
+	
 	private void shoot() {
 		
 		if (elapsedTime - lastFireTime  > rateOfFire) {
 			lastFireTime = elapsedTime;
 			
 			Vector2 randomDisplacement = new Vector2(rnd.Next(bulletSpread) - bulletSpread/2, rnd.Next(bulletSpread) - bulletSpread/2);
-		
-			bulletNodes[bulletIndex].shoot(GetGlobalMousePosition() - Position + randomDisplacement);
 			
 			rayCast2D.CastTo = GetGlobalMousePosition() - Position + randomDisplacement;
-			if (rayCast2D.IsColliding() && ((Node)rayCast2D.GetCollider()).Name.Contains("Enemy")) {
-				((Enemy) rayCast2D.GetCollider()).TakeDamage(20);
+			if (rayCast2D.IsColliding()) {
+				if (((Node)rayCast2D.GetCollider()).Name.Contains("Enemy")) {
+					((Enemy) rayCast2D.GetCollider()).TakeDamage(20);
+				}
+				bulletNodes[bulletIndex].shoot(rayCast2D.GetCollisionPoint() - Position + randomDisplacement);
+			} else {
+				bulletNodes[bulletIndex].shoot(GetGlobalMousePosition() - Position + randomDisplacement);
 			}
 	
 			bulletIndex++;
@@ -82,22 +105,29 @@ public class PlayerKinematic : KinematicBody2D
 	{
 		elapsedTime += dt;
 		// Detect up/down/left/right keystate and only move when pressed
-		_velocity.x = slowAxis(_velocity.x);
-		_velocity.y = slowAxis(_velocity.y);
+		_velocity.x = 0;
+		_velocity.y = 0;
 
 		if (Input.IsActionPressed("ui_up")) {
-			_velocity.y -= Speed;
+			_velocity.y -= 1;
 		} if (Input.IsActionPressed("ui_down")) {
-			_velocity.y += Speed;
+			_velocity.y += 1;
 		} if (Input.IsActionPressed("ui_left")) {
-			_velocity.x -= Speed;
+			_velocity.x -= 1;
 		} if (Input.IsActionPressed("ui_right")) {
-			_velocity.x += Speed;
-		} if (Input.IsActionPressed("shoot")) {
+			_velocity.x += 1;
+		} 
+		
+		if (Input.IsActionPressed("shoot")) {
 			shoot();
+			speed = shootingSpeed;
+		} else {
+			speed = normalSpeed;
 		}
 		
 		SetAnimation(_velocity);
+		
+		_velocity = _velocity.Normalized() * speed;
 		
 	}
 	
@@ -142,21 +172,27 @@ public class PlayerKinematic : KinematicBody2D
   public override void _PhysicsProcess(float delta)
   {
 	
-	GetInput(delta);
-
-	MoveAndSlide(_velocity);
-	
-	// check for collision with enemy
-	//for (int i = 0; i < GetSlideCount(); i++) {
-	//	var collision = GetSlideCollision(i);
-	//	if (((Node)collision.Collider).Name.Contains("Enemy")) {
-	//		death();
-	//	}
-	//}
+	if (!dead) {
+		GetInput(delta);
+		MoveAndSlide(_velocity);
+	}
 	
   }
 
+	public void TakeDamage(float damage) {
+		if (!dead) {
+			currentHealth -= damage;
+			healthBar.UpdateHealthBarPercentage(currentHealth/maxHealth * 100);
+			if (currentHealth <= 0) {
+				death();
+			}
+		}
+	}
+	
 	public void death() {
+		GD.Print("DEAD");
+		dead = true;
+		sprite.Play("death");
 	}
 		
 	private void _on_Sprite_frame_changed()
