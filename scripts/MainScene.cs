@@ -30,7 +30,7 @@ public class MainScene : Node2D
 	
 	private int round = 0;
 	private int killCount = 0;
-	private int timeSurvived = 0;
+	private float timeSurvived = 0;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -88,25 +88,30 @@ public class MainScene : Node2D
 	public override void _Process(float delta)
 	{
 		
-		timeSurvived += delta;
+		if (playerKinematic.IsEndGame()) {
+			playerKinematic.EndGame(timeSurvived, round, killCount);
+		} else {
 		
-		for (int i = 0; i < maxEnemies; i++) {
-			if (enemies[i] != null) {
-				if (enemies[i].ToRemove()) {
-					enemies[i].QueueFree();
-					enemies[i] = null;
-					deadEnemies++;
-					playerKinematic.Spend(-10);
-					playerKinematic.SetEnemiesLeft(maxEnemies - deadEnemies);
-					killCount++;
-				}	
+			timeSurvived += delta;
+			
+			for (int i = 0; i < maxEnemies; i++) {
+				if (enemies[i] != null) {
+					if (enemies[i].ToRemove()) {
+						enemies[i].QueueFree();
+						enemies[i] = null;
+						deadEnemies++;
+						playerKinematic.Spend(-10);
+						playerKinematic.SetEnemiesLeft(maxEnemies - deadEnemies);
+						killCount++;
+					}	
+				}
 			}
-		}
-		
-		if (maxEnemies - deadEnemies == 0) {
-			this.playerKinematic.SetRoundState(RoundState.TOWER_DEFENCE);
-			deadEnemies = 0;
-			betweenRoundTimer.Start();
+			
+			if (maxEnemies - deadEnemies == 0) {
+				this.playerKinematic.SetRoundState(RoundState.TOWER_DEFENCE);
+				deadEnemies = 0;
+				betweenRoundTimer.Start();
+			}
 		}
 	}
 	

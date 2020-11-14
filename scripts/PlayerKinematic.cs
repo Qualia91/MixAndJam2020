@@ -17,6 +17,7 @@ public class PlayerKinematic : KinematicBody2D
 	private RayCast2D rayCast2D;
 	private TileMap tileMap;
 	private InGameUI inGameUI;
+	private EndGameUI endGameUI;
 	
 	private AudioStreamPlayer2D[] crunchSounds = new AudioStreamPlayer2D[4];
 
@@ -40,11 +41,12 @@ public class PlayerKinematic : KinematicBody2D
 	private int bulletSpread = 40;
 	
 	private bool dead = false;
+	private bool endGame = false;
 	
 	private RoundState roundState = RoundState.TOP_DOWN;
 	private TurretCreator turretCreatorNode;
 	
-	private int spendingMoney = 100;
+	private int spendingMoney = 150;
 	
 	public override void _Ready()
 	{
@@ -63,6 +65,7 @@ public class PlayerKinematic : KinematicBody2D
 		
 		this.inGameUI = GetNode<InGameUI>("Camera2D/HudLayer/UI");
 		this.tileMap = GetNode<TileMap>("../Navigation2D/TileMap");
+		this.endGameUI = GetNode<EndGameUI>("Camera2D/HudLayer/EndGameUI");
 		
 		this.bulletNodes = new BulletNode[maxBullets];
 				
@@ -73,6 +76,7 @@ public class PlayerKinematic : KinematicBody2D
 		
 			bulletNodes[i] = bulletInstance;
 		}
+		endGameUI.Visible = false;
 		
 		inGameUI.SetSpendingMoney(spendingMoney);
 	}
@@ -262,7 +266,25 @@ public class PlayerKinematic : KinematicBody2D
 		}
 	}
 	
+	public void EndGame(float timeSurvived, int round, int killCount) {
+		inGameUI.Visible = false;
+		endGameUI.Show(round, killCount, timeSurvived);
+	}
+	
+	public bool IsEndGame() {
+		return endGame;
+	}
+	
+	private void _on_Sprite_animation_finished()
+	{
+		if (dead) {
+			endGame = true;
+		}
+	}
+	
 }
+
+
 
 
 
