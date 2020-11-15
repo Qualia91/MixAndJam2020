@@ -27,6 +27,7 @@ public class MainScene : Node2D
 	private Timer betweenRoundTimer;
 	private Timer spawnTimer;
 	private PlayerKinematic playerKinematic;
+	private AudioStreamPlayer2D roundStartSound;
 	
 	private TurretCreator turretCreatorNode;
 	
@@ -46,6 +47,7 @@ public class MainScene : Node2D
 		this.playerKinematic = GetNode<PlayerKinematic>("PlayerKinematic");
 		this.betweenRoundTimer = GetNode<Timer>("BetweenRoundTimer");
 		this.spawnTimer = GetNode<Timer>("SpawnTimer");
+		this.roundStartSound = GetNode<AudioStreamPlayer2D>("RoundStartSound");
 		
 		this.buildMouse = ResourceLoader.Load("res://assets//images//buildMouse.png");
 		this.shootMouse = ResourceLoader.Load("res://assets//images//shootMouse.png");
@@ -147,6 +149,7 @@ public class MainScene : Node2D
 	{	
 		round++;
 		StartRound(round);
+		roundStartSound.Play();
 	}	
 	
 	private void _on_SpawnTimer_timeout()

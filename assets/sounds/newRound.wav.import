@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/newRound.wav-8d860848e7aa99cf60e8fa95fc291ae4.sample"
+
+[deps]
+
+source_file="res://assets/sounds/newRound.wav"
+dest_files=[ "res://.import/newRound.wav-8d860848e7aa99cf60e8fa95fc291ae4.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

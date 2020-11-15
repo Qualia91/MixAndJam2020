@@ -364,7 +364,7 @@ scale = Vector2( 3, 3 )
 z_as_relative = false
 frames = SubResource( 62 )
 animation = "idleDown"
-frame = 5
+frame = 6
 speed_scale = 1.5
 playing = true
 
@@ -405,6 +405,7 @@ stream = ExtResource( 15 )
 
 [node name="HealSound" type="AudioStreamPlayer2D" parent="sounds"]
 stream = ExtResource( 16 )
+volume_db = -10.0
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
 modulate = Color( 1, 1, 1, 0 )

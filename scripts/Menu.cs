@@ -19,7 +19,15 @@ public class Menu : Node2D
 	{
 		GetTree().Quit();
 	}
+	
+	private void _on_Lore_pressed()
+	{
+		GetTree().ChangeScene("res://scenes/LoreScene.tscn");
+	}
 }
+
+
+
 
 
 

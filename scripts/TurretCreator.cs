@@ -8,6 +8,8 @@ public class TurretCreator : Node2D
 	PackedScene TurretScene = (PackedScene) ResourceLoader.Load("res://scenes/Turret.tscn");
 	private Node2D mainNode;
 	private Button buildButton;
+	private Label label;
+	private AudioStreamPlayer2D buildSound;
 	private PlayerKinematic player = null;
 	private int cost = 150;
 	
@@ -17,6 +19,8 @@ public class TurretCreator : Node2D
 	public override void _Ready()
 	{
 		buildButton = GetNode<Button>("BuildButton");
+		label = GetNode<Label>("Label");
+		buildSound = GetNode<AudioStreamPlayer2D>("BuildSound");
 	}
 	
 	public void init(Node2D mainNode) {
@@ -24,10 +28,17 @@ public class TurretCreator : Node2D
 	}
 	
 	public void ShowOptions(PlayerKinematic player) {
-		if (player.GetSpendingMoney() < cost) {
-			buildButton.Disabled = true;
+		if (turretIndexes.Contains(new Index((int) Position.x, (int) Position.y))) {
+			buildButton.Visible = false;
+			label.Visible = false;
 		} else {
-			buildButton.Disabled = false;
+			buildButton.Visible = true;
+			label.Visible = true;
+			if (player.GetSpendingMoney() < cost) {
+				buildButton.Disabled = true;
+			} else {
+				buildButton.Disabled = false;
+			}
 		}
 	}
 	
@@ -40,6 +51,7 @@ public class TurretCreator : Node2D
 		Visible = false;
 		Index index = new Index((int) Position.x, (int) Position.y);
 		if (player.GetSpendingMoney() >= cost && !turretIndexes.Contains(index)) {
+			buildSound.Play();
 			player.Spend(cost);
 			turretIndexes.Add(index);
 			Turret turret = (Turret) TurretScene.Instance();
