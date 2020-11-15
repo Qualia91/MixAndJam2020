@@ -6,6 +6,8 @@ public class MainScene : Node2D
 	
 	private PackedScene EnemyScene = (PackedScene) ResourceLoader.Load("res://scenes/Enemy.tscn");
 	private PackedScene TurretCreatorScene = (PackedScene) ResourceLoader.Load("res://scenes/TurretCreator.tscn");
+	private PackedScene HealthDropScene = (PackedScene) ResourceLoader.Load("res://scenes/HealthDrop.tscn");
+	private PackedScene PointsDropScene = (PackedScene) ResourceLoader.Load("res://scenes/PointsDrop.tscn");
 	
 	private int maxEnemies = 20;
 	private int enemiesSpawned = 0;
@@ -31,6 +33,11 @@ public class MainScene : Node2D
 	private int round = 0;
 	private int killCount = 0;
 	private float timeSurvived = 0;
+	
+	private Random random = new Random();
+	
+	private Resource buildMouse;
+	private Resource shootMouse;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -39,6 +46,9 @@ public class MainScene : Node2D
 		this.playerKinematic = GetNode<PlayerKinematic>("PlayerKinematic");
 		this.betweenRoundTimer = GetNode<Timer>("BetweenRoundTimer");
 		this.spawnTimer = GetNode<Timer>("SpawnTimer");
+		
+		this.buildMouse = ResourceLoader.Load("res://assets//images//buildMouse.png");
+		this.shootMouse = ResourceLoader.Load("res://assets//images//shootMouse.png");
 		
 		this.turretCreatorNode = (TurretCreator) TurretCreatorScene.Instance();
 		this.turretCreatorNode.init(this);
@@ -54,11 +64,14 @@ public class MainScene : Node2D
 		startingPosition[3] = new Vector2(0, -2100);
 		enemies = new Enemy[maxEnemies];
 		
+		Input.SetCustomMouseCursor(buildMouse);
 		
 		playerKinematic.SetRound(round);
 	}
 	
 	private void StartRound(int roundNumber) {
+		
+		Input.SetCustomMouseCursor(shootMouse);
 		
 		if (roundNumber % 5 == 0) {
 			maxEnemies++;
@@ -89,6 +102,7 @@ public class MainScene : Node2D
 	{
 		
 		if (playerKinematic.IsEndGame()) {
+			Input.SetCustomMouseCursor(shootMouse);
 			playerKinematic.EndGame(timeSurvived, round, killCount);
 		} else {
 		
@@ -97,17 +111,31 @@ public class MainScene : Node2D
 			for (int i = 0; i < maxEnemies; i++) {
 				if (enemies[i] != null) {
 					if (enemies[i].ToRemove()) {
+						
+						if (random.NextDouble() < 0.1) {	
+							PointsDrop pointsDrop = (PointsDrop) PointsDropScene.Instance();
+							pointsDrop.Position = enemies[i].Position;
+							AddChild(pointsDrop);
+						} else if (random.NextDouble() < 0.1) {	
+							HealthDropNode healthDrop = (HealthDropNode) HealthDropScene.Instance();
+							healthDrop.Position = enemies[i].Position;
+							AddChild(healthDrop);
+						}
+						
 						enemies[i].QueueFree();
 						enemies[i] = null;
 						deadEnemies++;
 						playerKinematic.Spend(-10);
 						playerKinematic.SetEnemiesLeft(maxEnemies - deadEnemies);
 						killCount++;
+						
+						
 					}	
 				}
 			}
 			
 			if (maxEnemies - deadEnemies == 0) {
+				Input.SetCustomMouseCursor(buildMouse);
 				this.playerKinematic.SetRoundState(RoundState.TOWER_DEFENCE);
 				deadEnemies = 0;
 				betweenRoundTimer.Start();

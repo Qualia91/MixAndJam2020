@@ -18,6 +18,10 @@ public class PlayerKinematic : KinematicBody2D
 	private TileMap tileMap;
 	private InGameUI inGameUI;
 	private EndGameUI endGameUI;
+	private Particles2D healParticleEffect;
+	private AudioStreamPlayer2D moneyGained;
+	private AudioStreamPlayer2D hitSound;
+	private AudioStreamPlayer2D healSound;
 	
 	private AudioStreamPlayer2D[] crunchSounds = new AudioStreamPlayer2D[4];
 
@@ -59,6 +63,9 @@ public class PlayerKinematic : KinematicBody2D
 		crunchSounds[1] = GetNode<AudioStreamPlayer2D>("sounds/CrunchSoundTwo");
 		crunchSounds[2] = GetNode<AudioStreamPlayer2D>("sounds/CrunchSoundThree");
 		crunchSounds[3] = GetNode<AudioStreamPlayer2D>("sounds/CrunchSoundFour");
+		moneyGained = GetNode<AudioStreamPlayer2D>("sounds/MoneyGained");
+		hitSound = GetNode<AudioStreamPlayer2D>("sounds/HitSound");
+		healSound = GetNode<AudioStreamPlayer2D>("sounds/HealSound");
 		rayCast2D = GetNode<RayCast2D>("RayCast2D");
 		
 		healthBar = GetNode<HealthBar>("HealthBarNode");
@@ -66,6 +73,7 @@ public class PlayerKinematic : KinematicBody2D
 		this.inGameUI = GetNode<InGameUI>("Camera2D/HudLayer/UI");
 		this.tileMap = GetNode<TileMap>("../Navigation2D/TileMap");
 		this.endGameUI = GetNode<EndGameUI>("Camera2D/HudLayer/EndGameUI");
+		this.healParticleEffect = GetNode<Particles2D>("healParticleEffect");
 		
 		this.bulletNodes = new BulletNode[maxBullets];
 				
@@ -241,6 +249,8 @@ public class PlayerKinematic : KinematicBody2D
 
 	public void TakeDamage(float damage) {
 		if (!dead) {
+			bloodParticles.Emitting = true;
+			hitSound.Play();
 			currentHealth -= damage;
 			healthBar.UpdateHealthBarPercentage(currentHealth/maxHealth * 100);
 			if (currentHealth <= 0) {
@@ -250,7 +260,6 @@ public class PlayerKinematic : KinematicBody2D
 	}
 	
 	public void death() {
-		GD.Print("DEAD");
 		dead = true;
 		sprite.Play("death");
 	}
@@ -282,9 +291,22 @@ public class PlayerKinematic : KinematicBody2D
 		}
 	}
 	
+	private void _on_Area2D_area_entered(object area)
+	{
+		Node areaNode = ((Node)area);
+		Node parent = areaNode.GetParent();
+		if (parent.Name.Contains("Health")) {
+			healSound.Play();
+			currentHealth += 10;
+			currentHealth = Math.Min(maxHealth, currentHealth);
+			healParticleEffect.Emitting = true;
+			healthBar.UpdateHealthBarPercentage(currentHealth/maxHealth * 100);
+			parent.QueueFree();
+		} else if (parent.Name.Contains("Points")) {
+			moneyGained.Play();
+			Spend(-10);
+			parent.QueueFree();
+		}
+	}
+	
 }
-
-
-
-
-
