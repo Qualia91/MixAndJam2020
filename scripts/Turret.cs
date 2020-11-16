@@ -7,17 +7,22 @@ public class Turret : Node2D
 	PackedScene BulletScene = (PackedScene) ResourceLoader.Load("res://scenes/Bullet.tscn");
 		
 	private MainScene mainScene;
+	private Label levelLabel;
 	private Enemy target = null;
 	private BulletNode[] bulletNodes;
 	private int maxBullets = 10;
 	private int bulletIndex = 0;
 	private int rangeSquared = 40000;
 	private Vector2 offset = new Vector2(32, 32);
+	private int level = 1;
+	private int damage = 20;
+	private int cost = 300;
 		
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		this.mainScene = GetNode<MainScene>("../../MainNode");
+		this.levelLabel = GetNode<Label>("LevelLabel");
 		
 		this.bulletNodes = new BulletNode[maxBullets];
 				
@@ -28,6 +33,21 @@ public class Turret : Node2D
 		
 			bulletNodes[i] = bulletInstance;
 		}
+	}
+	
+	public int GetLevel() {
+		return level;
+	}
+	
+	public int GetCost() {
+		return cost;
+	}
+	
+	public void Upgrade() {
+		level++;
+		damage *= level;
+		cost *= level;
+		levelLabel.Text = level.ToString();
 	}
 
 	private void _on_SensingTimer_timeout()
@@ -58,7 +78,7 @@ public class Turret : Node2D
 		if (this.target != null) {
 			
 			bulletNodes[bulletIndex].shoot(offset, target.Position - Position);
-			target.TakeDamage(20);
+			target.TakeDamage(damage);
 	
 			bulletIndex++;
 			if (bulletIndex >= maxBullets) {

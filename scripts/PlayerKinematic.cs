@@ -52,6 +52,8 @@ public class PlayerKinematic : KinematicBody2D
 	
 	private int spendingMoney = 150;
 	
+	private float damage = 20;
+	
 	public override void _Ready()
 	{
 		sprite = GetNode<AnimatedSprite>("Sprite");
@@ -87,6 +89,7 @@ public class PlayerKinematic : KinematicBody2D
 		endGameUI.Visible = false;
 		
 		inGameUI.SetSpendingMoney(spendingMoney);
+		inGameUI.SetWeaponDamage(damage);
 	}
 	
 	public void AddTurret(TurretCreator turretCreatorNode) {
@@ -120,7 +123,7 @@ public class PlayerKinematic : KinematicBody2D
 			rayCast2D.CastTo = GetGlobalMousePosition() - Position + randomDisplacement;
 			if (rayCast2D.IsColliding()) {
 				if (((Node)rayCast2D.GetCollider()).Name.Contains("Enemy")) {
-					((Enemy) rayCast2D.GetCollider()).TakeDamage(20);
+					((Enemy) rayCast2D.GetCollider()).TakeDamage(damage);
 				}
 				bulletNodes[bulletIndex].shoot(rayCast2D.GetCollisionPoint() - Position + randomDisplacement);
 			} else {
@@ -149,7 +152,6 @@ public class PlayerKinematic : KinematicBody2D
 					if (pos.y < 0) posYDiff += 64;
 					turretCreatorNode.ShowOptions(this);
 					turretCreatorNode.Position = pos - new Vector2(posXDiff, posYDiff);
-					turretCreatorNode.Visible = true;
 				}
 			}
 		}
@@ -305,6 +307,10 @@ public class PlayerKinematic : KinematicBody2D
 		} else if (parent.Name.Contains("Points")) {
 			moneyGained.Play();
 			Spend(-10);
+			parent.QueueFree();
+		} else if (parent.Name.Contains("Damage")) {
+			damage += 20;
+			inGameUI.SetWeaponDamage(damage);
 			parent.QueueFree();
 		}
 	}

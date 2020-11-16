@@ -8,6 +8,7 @@ public class MainScene : Node2D
 	private PackedScene TurretCreatorScene = (PackedScene) ResourceLoader.Load("res://scenes/TurretCreator.tscn");
 	private PackedScene HealthDropScene = (PackedScene) ResourceLoader.Load("res://scenes/HealthDrop.tscn");
 	private PackedScene PointsDropScene = (PackedScene) ResourceLoader.Load("res://scenes/PointsDrop.tscn");
+	private PackedScene DamageDropScene = (PackedScene) ResourceLoader.Load("res://scenes/DamageDrop.tscn");
 	
 	private int maxEnemies = 20;
 	private int enemiesSpawned = 0;
@@ -122,6 +123,10 @@ public class MainScene : Node2D
 							HealthDropNode healthDrop = (HealthDropNode) HealthDropScene.Instance();
 							healthDrop.Position = enemies[i].Position;
 							AddChild(healthDrop);
+						} else if (random.NextDouble() < 0.01) {	
+							DamageDrop damageDrop = (DamageDrop) DamageDropScene.Instance();
+							damageDrop.Position = enemies[i].Position;
+							AddChild(damageDrop);
 						}
 						
 						enemies[i].QueueFree();

@@ -8,6 +8,7 @@ public class InGameUI : Node2D
 	private Label roundLabel;
 	private Label spendingMoneyLabel;
 	private Label roundState;
+	private Label weaponDamageLabel;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -16,6 +17,7 @@ public class InGameUI : Node2D
 		this.roundLabel = GetNode<Label>("RoundLabel");
 		this.spendingMoneyLabel = GetNode<Label>("SpendingMoneyLabel");
 		this.roundState = GetNode<Label>("RoundState");
+		this.weaponDamageLabel = GetNode<Label>("WeaponDamageLabel");
 	}
 	
 	public void SetRoundState(RoundState roundState) {
@@ -36,6 +38,10 @@ public class InGameUI : Node2D
 	
 	public void SetSpendingMoney(int money) {
 		this.spendingMoneyLabel.Text = "Spending Money: " + money;
+	}
+	
+	public void SetWeaponDamage(float weaponDamage) {
+		this.weaponDamageLabel.Text = "Weapon Damage: " + weaponDamage;
 	}
 
 }
