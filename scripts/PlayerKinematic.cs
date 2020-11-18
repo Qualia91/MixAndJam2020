@@ -54,6 +54,10 @@ public class PlayerKinematic : KinematicBody2D
 	
 	private float damage = 20;
 	
+	private int roundBonusBase = 20;
+	private int round = 0;
+	
+	
 	public override void _Ready()
 	{
 		sprite = GetNode<AnimatedSprite>("Sprite");
@@ -102,6 +106,7 @@ public class PlayerKinematic : KinematicBody2D
 	}
 	
 	public void SetRound(int round) {
+		this.round = round;
 		inGameUI.SetRound(round);
 	}
 	
@@ -110,6 +115,11 @@ public class PlayerKinematic : KinematicBody2D
 		inGameUI.SetRoundState(roundState);
 		if (roundState == RoundState.TOP_DOWN) {
 			turretCreatorNode.Visible = false;
+		} else {
+			if (round > 0) {
+				inGameUI.AddKill("Round Survived: +" + (roundBonusBase*round));
+				Spend(-roundBonusBase*round);
+			}
 		}
 	}
 	
@@ -159,6 +169,10 @@ public class PlayerKinematic : KinematicBody2D
 	
 	public int GetSpendingMoney() {
 		return spendingMoney;
+	}
+	
+	public void EnemyKilled() {
+		inGameUI.AddKill("Enemy Killed +10");
 	}
 	
 	public void Spend(int spend) {

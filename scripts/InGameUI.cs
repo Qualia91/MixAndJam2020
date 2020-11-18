@@ -9,6 +9,7 @@ public class InGameUI : Node2D
 	private Label spendingMoneyLabel;
 	private Label roundState;
 	private Label weaponDamageLabel;
+	private ItemList killFeed;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -18,6 +19,19 @@ public class InGameUI : Node2D
 		this.spendingMoneyLabel = GetNode<Label>("SpendingMoneyLabel");
 		this.roundState = GetNode<Label>("RoundState");
 		this.weaponDamageLabel = GetNode<Label>("WeaponDamageLabel");
+		this.killFeed = GetNode<ItemList>("KillFeed");
+	}
+	
+	public void AddKill(String kill) {
+		killFeed.AddItem(kill);
+		
+		Timer timer = new Timer();
+		AddChild(timer);
+		timer.SetOneShot(true);
+		timer.SetWaitTime(5);
+		timer.Connect("timeout", this, "_timer_callback");
+		timer.Autostart = true;
+		timer.Start();
 	}
 	
 	public void SetRoundState(RoundState roundState) {
@@ -42,6 +56,10 @@ public class InGameUI : Node2D
 	
 	public void SetWeaponDamage(float weaponDamage) {
 		this.weaponDamageLabel.Text = "Weapon Damage: " + weaponDamage;
+	}
+	
+	public void _timer_callback() {
+		killFeed.RemoveItem(0);
 	}
 
 }

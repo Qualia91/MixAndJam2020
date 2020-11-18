@@ -133,6 +133,7 @@ public class MainScene : Node2D
 						enemies[i] = null;
 						deadEnemies++;
 						playerKinematic.Spend(-10);
+						playerKinematic.EnemyKilled();
 						playerKinematic.SetEnemiesLeft(maxEnemies - deadEnemies);
 						killCount++;
 						
