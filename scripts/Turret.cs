@@ -21,7 +21,7 @@ public class Turret : Node2D
 	private int costBase = 300;
 	private int damage = 20;
 	private int cost = 300;
-	private float waitTime = 0.5f;
+	private float waitTime = 1;
 		
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -40,8 +40,6 @@ public class Turret : Node2D
 		
 			bulletNodes[i] = bulletInstance;
 		}
-		
-		shotTimer.WaitTime = waitTime;
 	}
 	
 	public int GetLevel() {
@@ -58,10 +56,8 @@ public class Turret : Node2D
 		cost = costBase * level;
 		levelLabel.Text = level.ToString();
 		
-		if (shotTimer.WaitTime > 0.1) {
-			shotTimer.WaitTime -= 0.05f;
-			sensingTimer.WaitTime -= 0.05f;
-		}
+		shotTimer.WaitTime *= 0.7f;
+		sensingTimer.WaitTime *= 0.7f;
 	}
 
 	private void _on_SensingTimer_timeout()

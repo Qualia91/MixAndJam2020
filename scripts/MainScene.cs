@@ -1,11 +1,13 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public class MainScene : Node2D
 {
 	
 	private PackedScene EnemyScene = (PackedScene) ResourceLoader.Load("res://scenes/Enemy.tscn");
 	private PackedScene TurretCreatorScene = (PackedScene) ResourceLoader.Load("res://scenes/TurretCreator.tscn");
+	private PackedScene WeaponUpgraderScene = (PackedScene) ResourceLoader.Load("res://scenes/WeaponUpgrader.tscn");
 	private PackedScene HealthDropScene = (PackedScene) ResourceLoader.Load("res://scenes/HealthDrop.tscn");
 	private PackedScene PointsDropScene = (PackedScene) ResourceLoader.Load("res://scenes/PointsDrop.tscn");
 	private PackedScene DamageDropScene = (PackedScene) ResourceLoader.Load("res://scenes/DamageDrop.tscn");
@@ -31,6 +33,9 @@ public class MainScene : Node2D
 	private AudioStreamPlayer2D roundStartSound;
 	
 	private TurretCreator turretCreatorNode;
+	private WeaponUpgrader weaponUpgrader;
+	
+	private HighScoreSaveData highScoreSaveData;
 	
 	private int round = 0;
 	private int killCount = 0;
@@ -38,8 +43,7 @@ public class MainScene : Node2D
 	
 	private Random random = new Random();
 	
-	private Resource buildMouse;
-	private Resource shootMouse;
+	private bool saved = false;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -49,15 +53,17 @@ public class MainScene : Node2D
 		this.betweenRoundTimer = GetNode<Timer>("BetweenRoundTimer");
 		this.spawnTimer = GetNode<Timer>("SpawnTimer");
 		this.roundStartSound = GetNode<AudioStreamPlayer2D>("RoundStartSound");
-		
-		this.buildMouse = ResourceLoader.Load("res://assets//images//buildMouse.png");
-		this.shootMouse = ResourceLoader.Load("res://assets//images//shootMouse.png");
+		this.highScoreSaveData = GetNode<HighScoreSaveData>("HighScoreSaveData");
 		
 		this.turretCreatorNode = (TurretCreator) TurretCreatorScene.Instance();
 		this.turretCreatorNode.init(this);
 		this.turretCreatorNode.Visible = false;
+		this.weaponUpgrader = (WeaponUpgrader) WeaponUpgraderScene.Instance();
+		this.weaponUpgrader.Visible = false;
 		AddChild(turretCreatorNode);
+		AddChild(weaponUpgrader);
 		playerKinematic.AddTurret(turretCreatorNode);
+		playerKinematic.AddWeaponUpgrader(weaponUpgrader);
 		
 		this.playerKinematic.SetRoundState(RoundState.TOWER_DEFENCE);
 			
@@ -67,17 +73,19 @@ public class MainScene : Node2D
 		startingPosition[3] = new Vector2(0, -2100);
 		enemies = new Enemy[maxEnemies];
 		
-		Input.SetCustomMouseCursor(buildMouse);
-		
 		playerKinematic.SetRound(round);
+		
+		saved = false;
 	}
 	
 	private void StartRound(int roundNumber) {
 		
-		Input.SetCustomMouseCursor(shootMouse);
-		
 		if (roundNumber % 5 == 0) {
-			maxEnemies++;
+			maxEnemies+=2;
+		}
+		
+		if (roundNumber % 10 == 0) {
+			spawnTimer.WaitTime *= 0.8f;
 		}
 		
 		enemies = new Enemy[maxEnemies];
@@ -105,8 +113,12 @@ public class MainScene : Node2D
 	{
 		
 		if (playerKinematic.IsEndGame()) {
-			Input.SetCustomMouseCursor(shootMouse);
 			playerKinematic.EndGame(timeSurvived, round, killCount);
+			highScoreSaveData.AddScore(round * killCount * (int) (timeSurvived/60.0));
+			if (!saved) {
+				saved = true;
+				SaveGame();
+			}
 		} else {
 		
 			timeSurvived += delta;
@@ -143,12 +155,39 @@ public class MainScene : Node2D
 			}
 			
 			if (maxEnemies - deadEnemies == 0) {
-				Input.SetCustomMouseCursor(buildMouse);
 				this.playerKinematic.SetRoundState(RoundState.TOWER_DEFENCE);
 				deadEnemies = 0;
 				betweenRoundTimer.Start();
 			}
 		}
+	}
+	
+	public void SaveGame()
+	{
+		var saveGame = new File();
+		saveGame.Open("user://savegame.save", File.ModeFlags.Write);
+
+		var saveNodes = GetTree().GetNodesInGroup("Persist");
+		foreach (Node saveNode in saveNodes)
+		{
+			if (saveNode.Filename.Empty())
+			{
+				GD.Print(String.Format("persistent node '{0}' is not an instanced scene, skipped", saveNode.Name));
+				continue;
+			}
+
+			if (!saveNode.HasMethod("Save"))
+			{
+				GD.Print(String.Format("persistent node '{0}' is missing a Save() function, skipped", saveNode.Name));
+				continue;
+			}
+
+			var nodeData = saveNode.Call("Save");
+
+			saveGame.StoreLine(JSON.Print(nodeData));
+		}
+
+		saveGame.Close();
 	}
 	
 	private void _on_BetweenRoundTimer_timeout()

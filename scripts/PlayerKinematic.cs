@@ -49,10 +49,11 @@ public class PlayerKinematic : KinematicBody2D
 	
 	private RoundState roundState = RoundState.TOP_DOWN;
 	private TurretCreator turretCreatorNode;
+	private WeaponUpgrader weaponUpgrader;
 	
 	private int spendingMoney = 150;
 	
-	private float damage = 20;
+	private int damage = 20;
 	
 	private int roundBonusBase = 20;
 	private int round = 0;
@@ -96,6 +97,10 @@ public class PlayerKinematic : KinematicBody2D
 		inGameUI.SetWeaponDamage(damage);
 	}
 	
+	public void AddWeaponUpgrader(WeaponUpgrader weaponUpgrader) {
+		this.weaponUpgrader = weaponUpgrader;
+	}
+	
 	public void AddTurret(TurretCreator turretCreatorNode) {
 		this.turretCreatorNode = turretCreatorNode;
 		turretCreatorNode.SetPlayer(this);
@@ -115,6 +120,7 @@ public class PlayerKinematic : KinematicBody2D
 		inGameUI.SetRoundState(roundState);
 		if (roundState == RoundState.TOP_DOWN) {
 			turretCreatorNode.Visible = false;
+			weaponUpgrader.Visible = false;
 		} else {
 			if (round > 0) {
 				inGameUI.AddKill("Round Survived: +" + (roundBonusBase*round));
@@ -162,9 +168,26 @@ public class PlayerKinematic : KinematicBody2D
 					if (pos.y < 0) posYDiff += 64;
 					turretCreatorNode.ShowOptions(this);
 					turretCreatorNode.Position = pos - new Vector2(posXDiff, posYDiff);
+				} else if (tile == 2) {
+					Vector2 pos = GetGlobalMousePosition();
+					var posXDiff = pos.x % 64;
+					var posYDiff = pos.y % 64;
+					if (pos.x < 0) posXDiff += 64;
+					if (pos.y < 0) posYDiff += 64;
+					weaponUpgrader.ShowOptions(this);
+					weaponUpgrader.Position = pos - new Vector2(posXDiff, posYDiff);
 				}
 			}
 		}
+	}
+	
+	public int GetWeaponDamage() {
+		return damage;
+	}
+	
+	public void SetWeaponDamage(int weaponDamage) {
+		this.damage = weaponDamage;
+		inGameUI.SetWeaponDamage(damage);
 	}
 	
 	public int GetSpendingMoney() {

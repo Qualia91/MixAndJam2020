@@ -12,7 +12,7 @@ public class Enemy : KinematicBody2D
 	private Vector2[] path = null;
 	private int currentPathPointIndex = 0;
 	private Vector2 _velocity = new Vector2(0, 0);
-	private float speed = 200;
+	private float speed = 100;
 	private int pathSize = 0;
 	private Random random = new Random();
 	private AnimationPlayer anim;
@@ -55,6 +55,10 @@ public class Enemy : KinematicBody2D
 	public void SetDifficulty(int round) {
 		maxHealth = maxHealth + (round * round);
 		currentHealth = maxHealth;
+		
+		if (random.NextDouble() < (round / 20.0)) {
+			speed *= 2;
+		}
 	}
 	
 	public void TakeDamage(float damage) {

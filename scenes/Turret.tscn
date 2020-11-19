@@ -22,11 +22,9 @@ __meta__ = {
 }
 
 [node name="ShotTimer" type="Timer" parent="."]
-wait_time = 0.5
 autostart = true
 
 [node name="SensingTimer" type="Timer" parent="."]
-wait_time = 0.5
 autostart = true
 
 [node name="LevelLabel" type="Label" parent="."]
