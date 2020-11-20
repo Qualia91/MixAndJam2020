@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://assets/images/turret.png" type="Texture" id=1]
 [ext_resource path="res://scripts/TurretCreator.cs" type="Script" id=2]
 [ext_resource path="res://assets/fonts/BigShouldersStencilText-Light.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://assets/sounds/build.wav" type="AudioStream" id=4]
+[ext_resource path="res://assets/images/dropImage.png" type="Texture" id=5]
 
 [sub_resource type="DynamicFont" id=1]
 size = 20
@@ -11,6 +12,21 @@ font_data = ExtResource( 3 )
 
 [node name="TurretCreatorNode" type="Node2D"]
 script = ExtResource( 2 )
+
+[node name="Range" type="TextureRect" parent="."]
+modulate = Color( 0.501961, 1, 0.219608, 0.556863 )
+margin_left = -68.1128
+margin_top = -68.0094
+margin_right = 131.887
+margin_bottom = 131.991
+grow_horizontal = 2
+grow_vertical = 2
+rect_pivot_offset = Vector2( 100, 100 )
+texture = ExtResource( 5 )
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="TextureRect" type="TextureRect" parent="."]
 modulate = Color( 1, 1, 1, 0.407843 )

@@ -43,7 +43,6 @@ public class Enemy : KinematicBody2D
 		this.damageTakenNodes = new EnemyDamageTaken[damageTakenNodesCount];
 				
 		for (int i = 0; i < damageTakenNodesCount; i++) {
-			
 			EnemyDamageTaken damageTakenInstance = (EnemyDamageTaken) EnemyDamageTakenScene.Instance();
 			AddChild(damageTakenInstance);
 			damageTakenNodes[i] = damageTakenInstance;
@@ -62,6 +61,7 @@ public class Enemy : KinematicBody2D
 	}
 	
 	public void TakeDamage(float damage) {
+		
 		damageTakenNodes[damageTakenNodesIndex].action();
 		
 		currentHealth -= damage;

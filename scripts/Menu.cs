@@ -16,20 +16,13 @@ public class Menu : Node2D
 
 	private void _on_Button_pressed()
 	{
-		GetTree().ChangeScene("res://scenes/MainScene.tscn");
+		GetTree().ChangeScene("res://scenes/SecondLevel.tscn");
 	}
 	
 	private void _on_Quit_pressed()
 	{
 		GetTree().Quit();
 	}
-	
-	private void _on_Lore_pressed()
-	{
-		GetTree().ChangeScene("res://scenes/LoreScene.tscn");
-	}
-	
-	
 	
 	public void LoadGame()
 	{

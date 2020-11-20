@@ -6,7 +6,7 @@ public class Turret : Node2D
 	
 	PackedScene BulletScene = (PackedScene) ResourceLoader.Load("res://scenes/Bullet.tscn");
 		
-	private MainScene mainScene;
+	private SecondLevel mainScene;
 	private Label levelLabel;
 	private Timer shotTimer;
 	private Timer sensingTimer;
@@ -14,6 +14,8 @@ public class Turret : Node2D
 	private BulletNode[] bulletNodes;
 	private int maxBullets = 10;
 	private int bulletIndex = 0;
+	private int rangeBase = 200;
+	private int range = 200;
 	private int rangeSquared = 40000;
 	private Vector2 offset = new Vector2(32, 32);
 	private int level = 1;
@@ -26,7 +28,7 @@ public class Turret : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		this.mainScene = GetNode<MainScene>("../../MainNode");
+		this.mainScene = GetNode<SecondLevel>("../../MainNode");
 		this.levelLabel = GetNode<Label>("LevelLabel");
 		this.shotTimer = GetNode<Timer>("ShotTimer");
 		this.sensingTimer = GetNode<Timer>("SensingTimer");
@@ -40,10 +42,15 @@ public class Turret : Node2D
 		
 			bulletNodes[i] = bulletInstance;
 		}
+		
 	}
 	
 	public int GetLevel() {
 		return level;
+	}
+	
+	public int GetRange() {
+		return range;
 	}
 	
 	public int GetCost() {
@@ -54,10 +61,14 @@ public class Turret : Node2D
 		level++;
 		damage = damageBase * level;
 		cost = costBase * level;
+		costBase += 10;
 		levelLabel.Text = level.ToString();
+		range = (int) (rangeBase + (rangeBase * ((level - 1) * 0.1f)));
+		rangeSquared = range * range;
 		
-		shotTimer.WaitTime *= 0.7f;
-		sensingTimer.WaitTime *= 0.7f;
+		shotTimer.WaitTime *= 0.9f;
+		sensingTimer.WaitTime *= 0.9f;
+		
 	}
 
 	private void _on_SensingTimer_timeout()
@@ -73,6 +84,7 @@ public class Turret : Node2D
 				if (enemy != null && !enemy.IsDead()) {
 					float dist = Position.DistanceSquaredTo(enemy.Position);
 					if (dist < rangeSquared && dist < distanceAway) {
+						GD.Print("In range?");
 						dist = distanceAway;
 						newTarget = enemy;
 					}

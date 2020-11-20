@@ -11,6 +11,7 @@ public class TurretCreator : Node2D
 	private Button buildButton;
 	private Label label;
 	private AudioStreamPlayer2D buildSound;
+	private TextureRect range;
 	private PlayerKinematic player = null;
 	
 	private Dictionary<Index, Turret> turretIndexes = new Dictionary<Index, Turret>();
@@ -21,6 +22,7 @@ public class TurretCreator : Node2D
 		buildButton = GetNode<Button>("BuildButton");
 		label = GetNode<Label>("Label");
 		buildSound = GetNode<AudioStreamPlayer2D>("BuildSound");
+		range = GetNode<TextureRect>("Range");
 	
 	}
 	
@@ -36,9 +38,11 @@ public class TurretCreator : Node2D
 			buildButton.Text = "Upgrade";
 			label.Text = turretIndexes[index].GetCost().ToString();
 			cost = turretIndexes[index].GetCost();
+			range.RectScale = new Vector2(turretIndexes[index].GetRange() * 0.005f, turretIndexes[index].GetRange() * 0.005f);
 		} else {
 			buildButton.Text = "Build Buy";
 			label.Text = "150";
+			range.RectScale = new Vector2(1, 1);
 		}
 		
 		if (player.GetSpendingMoney() < cost) {
