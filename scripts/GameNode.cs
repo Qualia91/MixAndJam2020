@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public class MainScene : Node2D
+public class GameNode : Node2D
 {
 	
 	private PackedScene EnemyScene = (PackedScene) ResourceLoader.Load("res://scenes/Enemy.tscn");
@@ -11,30 +11,30 @@ public class MainScene : Node2D
 	private PackedScene HealthDropScene = (PackedScene) ResourceLoader.Load("res://scenes/HealthDrop.tscn");
 	private PackedScene PointsDropScene = (PackedScene) ResourceLoader.Load("res://scenes/PointsDrop.tscn");
 	private PackedScene DamageDropScene = (PackedScene) ResourceLoader.Load("res://scenes/DamageDrop.tscn");
+	private PackedScene FireSnakeMapScene = (PackedScene) ResourceLoader.Load("res://scenes/FireSnakeMap.tscn");
+	private PackedScene ThePitMapScene = (PackedScene) ResourceLoader.Load("res://scenes/ThePitMap.tscn");
 	
 	private int maxEnemies = 20;
 	private int enemiesSpawned = 0;
 	private int deadEnemies = 0;
 	private Enemy[] enemies = null;
-
-	private float lastSpawn = 0;
-	private float currentTime = 0;
-	private float spawnDelay = 1;
 	
+	private Vector2[] startingPosition;
+	private int startingPositionCount;
 	private int startingPositionIndex = 0;
-	private int startingPositionCount = 4;
 	
-	private Vector2[] startingPosition = new Vector2[4];
+	private int weaponUpgradeTileIndex = 20;
+	private int shieldTileIndex = 21;
+	private int floorTileIndex = 22;
 	
 	private Navigation2D navigation2D;
 	private Timer betweenRoundTimer;
 	private Timer spawnTimer;
 	private PlayerKinematic playerKinematic;
 	private AudioStreamPlayer2D roundStartSound;
-	
+	private TileMap tileMap;
 	private TurretCreator turretCreatorNode;
 	private WeaponUpgrader weaponUpgrader;
-	
 	private HighScoreSaveData highScoreSaveData;
 	
 	private int round = 0;
@@ -44,11 +44,12 @@ public class MainScene : Node2D
 	private Random random = new Random();
 	
 	private bool saved = false;
+	private RoundState roundState = RoundState.TOWER_DEFENCE;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{ 
-		this.navigation2D = GetNode<Navigation2D>("Navigation2D");
+		
 		this.playerKinematic = GetNode<PlayerKinematic>("PlayerKinematic");
 		this.betweenRoundTimer = GetNode<Timer>("BetweenRoundTimer");
 		this.spawnTimer = GetNode<Timer>("SpawnTimer");
@@ -66,16 +67,84 @@ public class MainScene : Node2D
 		playerKinematic.AddWeaponUpgrader(weaponUpgrader);
 		
 		this.playerKinematic.SetRoundState(RoundState.TOWER_DEFENCE);
-			
-		startingPosition[0] = new Vector2(2100, 0);
-		startingPosition[1] = new Vector2(-2100, 0);
-		startingPosition[2] = new Vector2(0, 2100);
-		startingPosition[3] = new Vector2(0, -2100);
+		
 		enemies = new Enemy[maxEnemies];
 		
 		playerKinematic.SetRound(round);
 		
 		saved = false;
+		
+		Init(1);
+	}
+	
+	public TileMap GetTileMap() {
+		return tileMap;
+	}
+	
+	public override void _Input(InputEvent @event)
+	{
+		if (roundState == RoundState.TOWER_DEFENCE) {
+			// Mouse in viewport coordinates.
+			if (@event is InputEventMouseButton eventMouseButton) {
+				int tile = tileMap.GetCellv(tileMap.WorldToMap(GetGlobalMousePosition()));
+				if (tile == weaponUpgradeTileIndex) {
+					Vector2 pos = GetGlobalMousePosition();
+					var posXDiff = pos.x % 64;
+					var posYDiff = pos.y % 64;
+					if (pos.x < 0) posXDiff += 64;
+					if (pos.y < 0) posYDiff += 64;
+					weaponUpgrader.ShowOptions(playerKinematic);
+					weaponUpgrader.Position = pos - new Vector2(posXDiff, posYDiff);
+				} else if (tile == shieldTileIndex) {
+					Vector2 pos = GetGlobalMousePosition();
+					var posXDiff = pos.x % 64;
+					var posYDiff = pos.y % 64;
+					if (pos.x < 0) posXDiff += 64;
+					if (pos.y < 0) posYDiff += 64;
+					weaponUpgrader.ShowOptions(playerKinematic);
+					weaponUpgrader.Position = pos - new Vector2(posXDiff, posYDiff);
+				} else if (tile != floorTileIndex) {
+					Vector2 pos = GetGlobalMousePosition();
+					var posXDiff = pos.x % 64;
+					var posYDiff = pos.y % 64;
+					if (pos.x < 0) posXDiff += 64;
+					if (pos.y < 0) posYDiff += 64;
+					turretCreatorNode.ShowOptions(playerKinematic);
+					turretCreatorNode.Position = pos - new Vector2(posXDiff, posYDiff);
+				} 
+			}
+		}
+	}
+	
+	public void Init(int mapIndex) {
+		if (mapIndex == 1) {
+			this.navigation2D = (Navigation2D) FireSnakeMapScene.Instance();
+			AddChild(navigation2D);
+			
+			startingPosition = new Vector2[2];
+			startingPositionCount = 2;
+			startingPosition[0] = new Vector2(3008, 0);
+			startingPosition[1] = new Vector2(3008, -128);
+			
+			weaponUpgradeTileIndex = 20;
+			shieldTileIndex = 21;
+			floorTileIndex = 22;
+		} else {
+			this.navigation2D = (Navigation2D) ThePitMapScene.Instance();
+			AddChild(navigation2D);
+			
+			startingPosition = new Vector2[4];
+			startingPositionCount = 4;
+			startingPosition[0] = new Vector2(2100, 0);
+			startingPosition[1] = new Vector2(-2100, 0);
+			startingPosition[2] = new Vector2(0, 2100);
+			startingPosition[3] = new Vector2(0, -2100);
+			
+			weaponUpgradeTileIndex = 20;
+			shieldTileIndex = 21;
+			floorTileIndex = 22;
+		}
+		this.tileMap = navigation2D.GetNode<TileMap>("TileMap");
 	}
 	
 	private void StartRound(int roundNumber) {
@@ -92,6 +161,7 @@ public class MainScene : Node2D
 		
 		for (int i = 0; i < maxEnemies; i++) {
 			Enemy enemyInstance = (Enemy) EnemyScene.Instance();
+			enemyInstance.Position = new Vector2(float.MaxValue, float.MaxValue);
 			enemyInstance.SetDifficulty(round);
 			enemyInstance.giveNavigation2D(navigation2D);
 			enemies[i] = enemyInstance;
@@ -99,6 +169,7 @@ public class MainScene : Node2D
 		
 		this.playerKinematic.SetRound(roundNumber);
 		this.playerKinematic.SetEnemiesLeft(maxEnemies);
+		roundState = RoundState.TOP_DOWN;
 		this.playerKinematic.SetRoundState(RoundState.TOP_DOWN);
 		
 		spawnTimer.Start();
@@ -156,6 +227,7 @@ public class MainScene : Node2D
 			
 			if (maxEnemies - deadEnemies == 0) {
 				this.playerKinematic.SetRoundState(RoundState.TOWER_DEFENCE);
+				roundState = RoundState.TOWER_DEFENCE;
 				deadEnemies = 0;
 				betweenRoundTimer.Start();
 			}

@@ -16,7 +16,7 @@ public class Menu : Node2D
 
 	private void _on_Button_pressed()
 	{
-		GetTree().ChangeScene("res://scenes/SecondLevel.tscn");
+		GetTree().ChangeScene("res://scenes/GameScene.tscn");
 	}
 	
 	private void _on_Quit_pressed()

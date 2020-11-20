@@ -15,7 +15,6 @@ public class PlayerKinematic : KinematicBody2D
 	private Particles2D bloodParticles;
 	private Camera2D camera2D;
 	private RayCast2D rayCast2D;
-	private TileMap tileMap;
 	private InGameUI inGameUI;
 	private EndGameUI endGameUI;
 	private Particles2D healParticleEffect;
@@ -58,10 +57,6 @@ public class PlayerKinematic : KinematicBody2D
 	private int roundBonusBase = 20;
 	private int round = 0;
 	
-	private int weaponUpgradeTileIndex = 20;
-	private int shieldTileIndex = 21;
-	private int floorTileIndex = 22;
-	
 	public override void _Ready()
 	{
 		sprite = GetNode<AnimatedSprite>("Sprite");
@@ -81,7 +76,6 @@ public class PlayerKinematic : KinematicBody2D
 		healthBar = GetNode<HealthBar>("HealthBarNode");
 		
 		this.inGameUI = GetNode<InGameUI>("Camera2D/HudLayer/UI");
-		this.tileMap = GetNode<TileMap>("../Navigation2D/TileMap");
 		this.endGameUI = GetNode<EndGameUI>("Camera2D/HudLayer/EndGameUI");
 		this.healParticleEffect = GetNode<Particles2D>("healParticleEffect");
 		
@@ -155,41 +149,6 @@ public class PlayerKinematic : KinematicBody2D
 			}
 		}
 		
-	}
-	
-	public override void _Input(InputEvent @event)
-	{
-		if (roundState == RoundState.TOWER_DEFENCE) {
-			// Mouse in viewport coordinates.
-			if (@event is InputEventMouseButton eventMouseButton) {
-				int tile = tileMap.GetCellv(tileMap.WorldToMap(GetGlobalMousePosition()));
-				if (tile == weaponUpgradeTileIndex) {
-					Vector2 pos = GetGlobalMousePosition();
-					var posXDiff = pos.x % 64;
-					var posYDiff = pos.y % 64;
-					if (pos.x < 0) posXDiff += 64;
-					if (pos.y < 0) posYDiff += 64;
-					weaponUpgrader.ShowOptions(this);
-					weaponUpgrader.Position = pos - new Vector2(posXDiff, posYDiff);
-				} else if (tile == shieldTileIndex) {
-					Vector2 pos = GetGlobalMousePosition();
-					var posXDiff = pos.x % 64;
-					var posYDiff = pos.y % 64;
-					if (pos.x < 0) posXDiff += 64;
-					if (pos.y < 0) posYDiff += 64;
-					weaponUpgrader.ShowOptions(this);
-					weaponUpgrader.Position = pos - new Vector2(posXDiff, posYDiff);
-				} else if (tile != floorTileIndex) {
-					Vector2 pos = GetGlobalMousePosition();
-					var posXDiff = pos.x % 64;
-					var posYDiff = pos.y % 64;
-					if (pos.x < 0) posXDiff += 64;
-					if (pos.y < 0) posYDiff += 64;
-					turretCreatorNode.ShowOptions(this);
-					turretCreatorNode.Position = pos - new Vector2(posXDiff, posYDiff);
-				} 
-			}
-		}
 	}
 	
 	public int GetWeaponDamage() {

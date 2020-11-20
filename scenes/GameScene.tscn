@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://scenes/PlayerKinematic.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scripts/GameNode.cs" type="Script" id=3]
+[ext_resource path="res://assets/sounds/newRound.wav" type="AudioStream" id=5]
+[ext_resource path="res://scenes/HighScoreSaveData.tscn" type="PackedScene" id=6]
+
+[node name="GameNode" type="Node2D"]
+script = ExtResource( 3 )
+
+[node name="PlayerKinematic" parent="." instance=ExtResource( 2 )]
+position = Vector2( -0.11467, -0.0619049 )
+
+[node name="BetweenRoundTimer" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = true
+autostart = true
+
+[node name="SpawnTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="RoundStartSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 5 )
+volume_db = -10.0
+
+[node name="HighScoreSaveData" parent="." instance=ExtResource( 6 )]
+[connection signal="timeout" from="BetweenRoundTimer" to="." method="_on_BetweenRoundTimer_timeout"]
+[connection signal="timeout" from="SpawnTimer" to="." method="_on_SpawnTimer_timeout"]
