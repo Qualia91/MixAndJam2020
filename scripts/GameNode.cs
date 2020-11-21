@@ -13,6 +13,7 @@ public class GameNode : Node2D
 	private PackedScene DamageDropScene = (PackedScene) ResourceLoader.Load("res://scenes/DamageDrop.tscn");
 	private PackedScene FireSnakeMapScene = (PackedScene) ResourceLoader.Load("res://scenes/FireSnakeMap.tscn");
 	private PackedScene ThePitMapScene = (PackedScene) ResourceLoader.Load("res://scenes/ThePitMap.tscn");
+	private PackedScene MountainMapScene = (PackedScene) ResourceLoader.Load("res://scenes/MountainMap.tscn");
 	
 	private int maxEnemies = 20;
 	private int enemiesSpawned = 0;
@@ -45,10 +46,14 @@ public class GameNode : Node2D
 	
 	private bool saved = false;
 	private RoundState roundState = RoundState.TOWER_DEFENCE;
+	
+	private int levelIndex = 0;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{ 
+		
+		var levelInitVariable = (LevelInitVariable)GetNode("/root/LevelInitVariable");
 		
 		this.playerKinematic = GetNode<PlayerKinematic>("PlayerKinematic");
 		this.betweenRoundTimer = GetNode<Timer>("BetweenRoundTimer");
@@ -74,7 +79,8 @@ public class GameNode : Node2D
 		
 		saved = false;
 		
-		Init(1);
+		this.levelIndex = levelInitVariable.levelIndex;
+		Init(levelIndex);
 	}
 	
 	public TileMap GetTileMap() {
@@ -125,6 +131,19 @@ public class GameNode : Node2D
 			startingPositionCount = 2;
 			startingPosition[0] = new Vector2(3008, 0);
 			startingPosition[1] = new Vector2(3008, -128);
+			
+			weaponUpgradeTileIndex = 20;
+			shieldTileIndex = 21;
+			floorTileIndex = 22;
+		} else if (mapIndex == 2) {
+			this.navigation2D = (Navigation2D) MountainMapScene.Instance();
+			AddChild(navigation2D);
+			
+			startingPosition = new Vector2[3];
+			startingPositionCount = 3;
+			startingPosition[0] = new Vector2(-1408, 1664);
+			startingPosition[1] = new Vector2(-64, 1664);
+			startingPosition[2] = new Vector2(1152, 1664);
 			
 			weaponUpgradeTileIndex = 20;
 			shieldTileIndex = 21;
@@ -185,7 +204,7 @@ public class GameNode : Node2D
 		
 		if (playerKinematic.IsEndGame()) {
 			playerKinematic.EndGame(timeSurvived, round, killCount);
-			highScoreSaveData.AddScore(round * killCount * (int) (timeSurvived/60.0));
+			highScoreSaveData.AddScore(round, levelIndex);
 			if (!saved) {
 				saved = true;
 				SaveGame();

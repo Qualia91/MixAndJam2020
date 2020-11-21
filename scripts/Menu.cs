@@ -5,17 +5,36 @@ using System.Collections.Generic;
 public class Menu : Node2D
 {
 	
-	private Label highScoreLabel;
+	private Label pitScoreLabel;
+	private Label snakeScoreLabel;
+	private Label mountainScoreLabel;
 	
 	public override void _Ready()
 	{
-		highScoreLabel = GetNode<Label>("HighScoreLabel");
-		
+		pitScoreLabel = GetNode<Label>("PitScoreLabel");
+		snakeScoreLabel = GetNode<Label>("SnakeScoreLabel");
+		mountainScoreLabel = GetNode<Label>("MountainScoreLabel");
 		LoadGame();
 	}
-
-	private void _on_Button_pressed()
+	
+	private void _on_FireSnake_pressed()
 	{
+		var levelInitVariable = (LevelInitVariable)GetNode("/root/LevelInitVariable");
+		levelInitVariable.levelIndex = 1;
+		GetTree().ChangeScene("res://scenes/GameScene.tscn");
+	}
+	
+	private void _on_ThePitButton_pressed()
+	{
+		var levelInitVariable = (LevelInitVariable)GetNode("/root/LevelInitVariable");
+		levelInitVariable.levelIndex = 0;
+		GetTree().ChangeScene("res://scenes/GameScene.tscn");
+	}
+	
+	private void _on_Mountain_pressed()
+	{
+		var levelInitVariable = (LevelInitVariable)GetNode("/root/LevelInitVariable");
+		levelInitVariable.levelIndex = 2;
 		GetTree().ChangeScene("res://scenes/GameScene.tscn");
 	}
 	
@@ -51,8 +70,12 @@ public class Menu : Node2D
 				string key = entry.Key.ToString();
 				if (key == "Filename" || key == "Parent")
 					continue;
-				if (key == "HIGH_SCORE")
-					highScoreLabel.Text = "HIGH SCORE: " + entry.Value.ToString();
+				if (key == "PIT_HIGH_SCORE")
+					pitScoreLabel.Text = "BEST ROUND: " + entry.Value.ToString();
+				if (key == "SNAKE_HIGH_SCORE")
+					snakeScoreLabel.Text = "BEST ROUND: " + entry.Value.ToString();
+				if (key == "MOUNTAIN_HIGH_SCORE")
+					mountainScoreLabel.Text = "BEST ROUND: " + entry.Value.ToString();
 				newObject.Set(key, entry.Value);
 			}
 		}
@@ -60,11 +83,3 @@ public class Menu : Node2D
 		saveGame.Close();
 	}
 }
-
-
-
-
-
-
-
-

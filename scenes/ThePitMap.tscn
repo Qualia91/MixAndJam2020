@@ -549,6 +549,7 @@ points = PoolVector2Array( 64, 64, 0, 64, 0, 0, 64, 0 )
 22/z_index = 0
 
 [node name="Navigation2D" type="Navigation2D"]
+z_index = -1
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource( 24 )

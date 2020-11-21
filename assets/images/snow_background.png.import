@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/emptyHealthBar.png-febce8716a44964c983721f5c10fcd6e.stex"
+path="res://.import/snow_background.png-3bcbdbeafa33cc23b7f5ff2fa7f14357.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/images/emptyHealthBar.png"
-dest_files=[ "res://.import/emptyHealthBar.png-febce8716a44964c983721f5c10fcd6e.stex" ]
+source_file="res://assets/images/snow_background.png"
+dest_files=[ "res://.import/snow_background.png-3bcbdbeafa33cc23b7f5ff2fa7f14357.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
-flags/filter=false
+flags/filter=true
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2

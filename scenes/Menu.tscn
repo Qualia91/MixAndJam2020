@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://assets/fonts/BigShouldersStencilText-Light.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://assets/images/grassFloor.png" type="Texture" id=2]
 [ext_resource path="res://scripts/Menu.cs" type="Script" id=3]
+[ext_resource path="res://scripts/LevelInitVariable.cs" type="Script" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 100
@@ -34,25 +35,53 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button" type="Button" parent="."]
-margin_left = 414.365
-margin_top = 286.688
-margin_right = 578.365
-margin_bottom = 413.688
+[node name="Mountain" type="Button" parent="."]
+margin_left = 681.652
+margin_top = 302.828
+margin_right = 845.652
+margin_bottom = 429.828
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 0, 0, 1 )
-text = "Start"
+text = "Mountain"
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FireSnake" type="Button" parent="."]
+margin_left = 300.0
+margin_top = 300.0
+margin_right = 628.0
+margin_bottom = 427.0
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_hover = Color( 1, 0, 0, 1 )
+text = "Fire Snake"
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ThePitButton" type="Button" parent="."]
+margin_left = 20.0
+margin_top = 300.0
+margin_right = 238.0
+margin_bottom = 427.0
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_hover = Color( 1, 0, 0, 1 )
+text = "The Pit"
 flat = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Quit" type="Button" parent="."]
-margin_left = 414.714
-margin_top = 409.898
-margin_right = 578.714
-margin_bottom = 536.898
+margin_left = 411.885
+margin_top = 436.768
+margin_right = 575.885
+margin_bottom = 563.768
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 0, 0, 1 )
@@ -78,16 +107,45 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HighScoreLabel" type="Label" parent="."]
+[node name="PitScoreLabel" type="Label" parent="."]
 margin_left = 20.0
-margin_top = 20.0
+margin_top = 410.0
 margin_right = 130.0
-margin_bottom = 57.0
+margin_bottom = 447.0
 custom_fonts/font = SubResource( 3 )
-text = "HIGH SCORE:"
+text = "Round:"
 uppercase = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+
+[node name="SnakeScoreLabel" type="Label" parent="."]
+margin_left = 300.0
+margin_top = 410.0
+margin_right = 410.0
+margin_bottom = 447.0
+custom_fonts/font = SubResource( 3 )
+text = "Round:"
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MountainScoreLabel" type="Label" parent="."]
+margin_left = 681.652
+margin_top = 410.0
+margin_right = 791.652
+margin_bottom = 447.0
+custom_fonts/font = SubResource( 3 )
+text = "Round:"
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LevelInitVariable" type="Node" parent="."]
+script = ExtResource( 4 )
+[connection signal="pressed" from="Mountain" to="." method="_on_Mountain_pressed"]
+[connection signal="pressed" from="FireSnake" to="." method="_on_FireSnake_pressed"]
+[connection signal="pressed" from="ThePitButton" to="." method="_on_ThePitButton_pressed"]
 [connection signal="pressed" from="Quit" to="." method="_on_Quit_pressed"]

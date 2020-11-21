@@ -8,14 +8,14 @@ size = 50
 outline_size = 1
 font_data = ExtResource( 1 )
 
-[sub_resource type="StyleBoxFlat" id=4]
+[sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
 
-[sub_resource type="DynamicFont" id=5]
+[sub_resource type="DynamicFont" id=3]
 size = 20
 
-[sub_resource type="Theme" id=3]
-default_font = SubResource( 5 )
+[sub_resource type="Theme" id=4]
+default_font = SubResource( 3 )
 ItemList/colors/font_color = Color( 1, 1, 1, 1 )
 ItemList/colors/font_color_selected = Color( 1, 1, 1, 0 )
 ItemList/colors/guide_color = Color( 0, 0, 0, 0 )
@@ -24,14 +24,14 @@ ItemList/constants/icon_margin = 4
 ItemList/constants/line_separation = 2
 ItemList/constants/vseparation = 2
 ItemList/fonts/font = null
-ItemList/styles/bg = SubResource( 4 )
+ItemList/styles/bg = SubResource( 2 )
 ItemList/styles/bg_focus = null
 ItemList/styles/cursor = null
 ItemList/styles/cursor_unfocused = null
 ItemList/styles/selected = null
 ItemList/styles/selected_focus = null
 
-[sub_resource type="DynamicFont" id=6]
+[sub_resource type="DynamicFont" id=5]
 size = 25
 outline_size = 1
 outline_color = Color( 0, 0.180392, 1, 1 )
@@ -146,8 +146,8 @@ margin_right = 320.0
 margin_bottom = 500.0
 rect_rotation = -0.028502
 mouse_filter = 2
-theme = SubResource( 3 )
-custom_fonts/font = SubResource( 6 )
+theme = SubResource( 4 )
+custom_fonts/font = SubResource( 5 )
 max_text_lines = 10
 auto_height = true
 __meta__ = {

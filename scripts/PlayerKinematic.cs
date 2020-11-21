@@ -32,7 +32,7 @@ public class PlayerKinematic : KinematicBody2D
 	private int bulletIndex = 0;
 	private int maxBullets = 10;
 	private float maxHealth = 100;
-	private float currentHealth = 100;
+	private float currentHealth = 10000000;
 	private HealthBar healthBar;
 	
 	private BulletNode[] bulletNodes;
@@ -50,7 +50,7 @@ public class PlayerKinematic : KinematicBody2D
 	private TurretCreator turretCreatorNode;
 	private WeaponUpgrader weaponUpgrader;
 	
-	private int spendingMoney = 15000;
+	private int spendingMoney = 150;
 	
 	private int damage = 20;
 	

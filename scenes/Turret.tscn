@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://assets/images/turret.png" type="Texture" id=1]
 [ext_resource path="res://scripts/Turret.cs" type="Script" id=2]
 [ext_resource path="res://assets/fonts/BigShouldersStencilText-Light.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://assets/images/turretGun.png" type="Texture" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 outline_size = 1
@@ -10,6 +11,7 @@ outline_color = Color( 1, 0, 0, 1 )
 font_data = ExtResource( 3 )
 
 [node name="TurretNode" type="Node2D"]
+z_index = -1
 script = ExtResource( 2 )
 
 [node name="TextureRect" type="TextureRect" parent="."]
@@ -17,6 +19,15 @@ margin_right = 40.0
 margin_bottom = 40.0
 mouse_filter = 2
 texture = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TurretGun" type="TextureRect" parent="."]
+margin_right = 64.0
+margin_bottom = 64.0
+rect_pivot_offset = Vector2( 32, 32 )
+texture = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -8,6 +8,7 @@ public class Turret : Node2D
 		
 	private GameNode gameNode;
 	private Label levelLabel;
+	private TextureRect turretGun;
 	private Timer shotTimer;
 	private Timer sensingTimer;
 	private Enemy target = null;
@@ -24,6 +25,7 @@ public class Turret : Node2D
 	private int damage = 20;
 	private int cost = 300;
 	private float waitTime = 1;
+	private Vector2 up;
 		
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -32,6 +34,7 @@ public class Turret : Node2D
 		this.levelLabel = GetNode<Label>("LevelLabel");
 		this.shotTimer = GetNode<Timer>("ShotTimer");
 		this.sensingTimer = GetNode<Timer>("SensingTimer");
+		this.turretGun = GetNode<TextureRect>("TurretGun");
 		
 		this.bulletNodes = new BulletNode[maxBullets];
 				
@@ -42,6 +45,8 @@ public class Turret : Node2D
 		
 			bulletNodes[i] = bulletInstance;
 		}
+		
+		up = new Vector2(0, 1);
 		
 	}
 	
@@ -100,6 +105,11 @@ public class Turret : Node2D
 			
 			bulletNodes[bulletIndex].shoot(offset, target.Position - Position);
 			target.TakeDamage(damage);
+			
+			// find angle to rotate turret gun
+			float angle = (float) ((up.AngleTo(Position + offset - target.Position) / Math.PI) * 180.0);
+			
+			turretGun.RectRotation = angle;
 	
 			bulletIndex++;
 			if (bulletIndex >= maxBullets) {
