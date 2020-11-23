@@ -24,9 +24,9 @@ public class GameNode : Node2D
 	private int startingPositionCount;
 	private int startingPositionIndex = 0;
 	
-	private int weaponUpgradeTileIndex = 20;
-	private int shieldTileIndex = 21;
-	private int floorTileIndex = 22;
+	private int weaponUpgradeTileIndex;
+	private int shieldTileIndex;
+	private int floorTileIndex;
 	
 	private Navigation2D navigation2D;
 	private Timer betweenRoundTimer;
@@ -145,9 +145,9 @@ public class GameNode : Node2D
 			startingPosition[1] = new Vector2(-64, 1664);
 			startingPosition[2] = new Vector2(1152, 1664);
 			
-			weaponUpgradeTileIndex = 20;
-			shieldTileIndex = 21;
-			floorTileIndex = 22;
+			weaponUpgradeTileIndex = 17;
+			shieldTileIndex = 18;
+			floorTileIndex = 19;
 		} else {
 			this.navigation2D = (Navigation2D) ThePitMapScene.Instance();
 			AddChild(navigation2D);

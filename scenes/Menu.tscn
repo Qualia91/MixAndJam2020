@@ -32,7 +32,7 @@ outline_size = 1
 outline_color = Color( 0, 0.0156863, 1, 1 )
 font_data = ExtResource( 1 )
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=5]
 resource_name = "BackAnimation"
 length = 0.5
 tracks/0/type = "value"
@@ -60,8 +60,7 @@ tracks/1/keys = {
 "values": [ Vector2( 0, 0 ), Vector2( 1024, 0 ) ]
 }
 
-[sub_resource type="Animation" id=5]
-resource_name = "StartAnimation"
+[sub_resource type="Animation" id=6]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("StartNode:position")
@@ -153,10 +152,10 @@ __meta__ = {
 position = Vector2( 1024, 0 )
 
 [node name="Mountain" type="Button" parent="LevelSelect"]
-margin_left = 20.0
-margin_top = 313.649
-margin_right = 768.0
-margin_bottom = 926.649
+margin_left = 500.0
+margin_top = 264.261
+margin_right = 1248.0
+margin_bottom = 877.261
 rect_scale = Vector2( 0.3, 0.3 )
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
@@ -168,9 +167,9 @@ __meta__ = {
 }
 
 [node name="FireSnake" type="Button" parent="LevelSelect"]
-margin_left = 498.236
+margin_left = 500.0
 margin_top = 20.0
-margin_right = 1726.24
+margin_right = 1728.0
 margin_bottom = 474.0
 rect_scale = Vector2( 0.4, 0.4 )
 custom_fonts/font = SubResource( 1 )
@@ -187,7 +186,7 @@ margin_left = 20.0
 margin_top = 20.0
 margin_right = 238.0
 margin_bottom = 147.0
-rect_scale = Vector2( 0.3, 0.3 )
+rect_scale = Vector2( 0.6, 0.6 )
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 0, 0, 1 )
@@ -199,9 +198,9 @@ __meta__ = {
 
 [node name="PitScoreLabel" type="Label" parent="LevelSelect"]
 margin_left = 20.0
-margin_top = 236.392
+margin_top = 428.333
 margin_right = 130.0
-margin_bottom = 273.392
+margin_bottom = 465.333
 custom_fonts/font = SubResource( 3 )
 text = "Round:"
 uppercase = true
@@ -210,9 +209,9 @@ __meta__ = {
 }
 
 [node name="SnakeScoreLabel" type="Label" parent="LevelSelect"]
-margin_left = 507.083
+margin_left = 500.0
 margin_top = 214.925
-margin_right = 617.083
+margin_right = 610.0
 margin_bottom = 251.925
 custom_fonts/font = SubResource( 3 )
 text = "Round:"
@@ -222,10 +221,10 @@ __meta__ = {
 }
 
 [node name="MountainScoreLabel" type="Label" parent="LevelSelect"]
-margin_left = 20.0
-margin_top = 507.899
-margin_right = 130.0
-margin_bottom = 544.899
+margin_left = 500.0
+margin_top = 460.756
+margin_right = 610.0
+margin_bottom = 497.756
 custom_fonts/font = SubResource( 3 )
 text = "Round:"
 uppercase = true
@@ -246,8 +245,8 @@ __meta__ = {
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/BackAnimation = SubResource( 6 )
-anims/StartAnimation = SubResource( 5 )
+anims/BackAnimation = SubResource( 5 )
+anims/StartAnimation = SubResource( 6 )
 [connection signal="pressed" from="StartNode/Quit" to="." method="_on_Quit_pressed"]
 [connection signal="pressed" from="StartNode/Play" to="." method="_on_Play_pressed"]
 [connection signal="pressed" from="LevelSelect/Mountain" to="." method="_on_Mountain_pressed"]
