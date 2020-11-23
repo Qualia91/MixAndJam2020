@@ -8,12 +8,18 @@ public class Menu : Node2D
 	private Label pitScoreLabel;
 	private Label snakeScoreLabel;
 	private Label mountainScoreLabel;
+	private Node2D levelSelect;
+	private Node2D startNode;
+	private AnimationPlayer animationPlayer;
 	
 	public override void _Ready()
 	{
-		pitScoreLabel = GetNode<Label>("PitScoreLabel");
-		snakeScoreLabel = GetNode<Label>("SnakeScoreLabel");
-		mountainScoreLabel = GetNode<Label>("MountainScoreLabel");
+		pitScoreLabel = GetNode<Label>("LevelSelect/PitScoreLabel");
+		snakeScoreLabel = GetNode<Label>("LevelSelect/SnakeScoreLabel");
+		mountainScoreLabel = GetNode<Label>("LevelSelect/MountainScoreLabel");
+		levelSelect = GetNode<Node2D>("LevelSelect");
+		startNode = GetNode<Node2D>("StartNode");
+		animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
 		LoadGame();
 	}
 	
@@ -41,6 +47,16 @@ public class Menu : Node2D
 	private void _on_Quit_pressed()
 	{
 		GetTree().Quit();
+	}
+	
+	private void _on_Play_pressed()
+	{
+		animationPlayer.Play("StartAnimation");
+	}
+	
+	private void _on_Button_pressed()
+	{
+		animationPlayer.Play("BackAnimation");
 	}
 	
 	public void LoadGame()
