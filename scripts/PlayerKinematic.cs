@@ -32,7 +32,7 @@ public class PlayerKinematic : KinematicBody2D
 	private int bulletIndex = 0;
 	private int maxBullets = 10;
 	private float maxHealth = 100;
-	private float currentHealth = 10000000;
+	private float currentHealth = 100;
 	private HealthBar healthBar;
 	
 	private BulletNode[] bulletNodes;

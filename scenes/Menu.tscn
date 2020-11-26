@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://assets/fonts/BigShouldersStencilText-Light.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://assets/images/grassFloor.png" type="Texture" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://assets/images/thePitMap.png" type="Texture" id=5]
 [ext_resource path="res://assets/images/mountainMap.png" type="Texture" id=6]
 [ext_resource path="res://assets/images/fireSnakeMap.png" type="Texture" id=7]
+[ext_resource path="res://assets/fonts/onlineMenu.tres" type="DynamicFont" id=8]
 
 [sub_resource type="DynamicFont" id=1]
 size = 100
@@ -32,8 +33,7 @@ outline_size = 1
 outline_color = Color( 0, 0.0156863, 1, 1 )
 font_data = ExtResource( 1 )
 
-[sub_resource type="Animation" id=5]
-resource_name = "BackAnimation"
+[sub_resource type="Animation" id=6]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("StartNode:position")
@@ -60,7 +60,63 @@ tracks/1/keys = {
 "values": [ Vector2( 0, 0 ), Vector2( 1024, 0 ) ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=8]
+resource_name = "OnlineAnimation"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("StartNode:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 0.2, 0.2 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 1024, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("OnlineNode:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 0.2, 1 ),
+"update": 0,
+"values": [ Vector2( -1024, 0 ), Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=9]
+resource_name = "OnlineBackAnimation"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("OnlineNode:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 0.2, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( -1024, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("StartNode:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 0.2, 1 ),
+"update": 0,
+"values": [ Vector2( 1024, 0 ), Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=7]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("StartNode:position")
@@ -119,14 +175,30 @@ __meta__ = {
 }
 
 [node name="Play" type="Button" parent="StartNode"]
-margin_left = 411.885
-margin_top = 310.0
-margin_right = 575.885
-margin_bottom = 437.0
+margin_left = 267.722
+margin_top = 305.995
+margin_right = 431.722
+margin_bottom = 432.995
+rect_pivot_offset = Vector2( 82, 94.4183 )
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 0, 0, 1 )
 text = "Play"
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Online" type="Button" parent="StartNode"]
+margin_left = 606.772
+margin_top = 310.0
+margin_right = 770.772
+margin_bottom = 437.0
+rect_pivot_offset = Vector2( 82, 94.4183 )
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_hover = Color( 1, 0, 0, 1 )
+text = "Online"
 flat = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -244,12 +316,119 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="OnlineNode" type="Node2D" parent="."]
+position = Vector2( -1024, 0 )
+
+[node name="IPLabel" type="Label" parent="OnlineNode"]
+anchor_left = -0.2
+margin_left = 289.2
+margin_top = 187.0
+margin_right = 306.2
+margin_bottom = 224.0
+size_flags_horizontal = 4
+size_flags_stretch_ratio = 0.5
+custom_fonts/font = ExtResource( 8 )
+text = "IP"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="IPInput" type="TextEdit" parent="OnlineNode"]
+anchor_right = 0.3
+margin_left = 405.0
+margin_top = 189.0
+margin_right = 605.0
+margin_bottom = 226.0
+size_flags_stretch_ratio = 0.5
+custom_fonts/font = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PortLabel" type="Label" parent="OnlineNode"]
+anchor_left = -0.2
+margin_left = 290.2
+margin_top = 232.0
+margin_right = 333.2
+margin_bottom = 269.0
+size_flags_horizontal = 4
+size_flags_stretch_ratio = 0.5
+custom_fonts/font = ExtResource( 8 )
+text = "PORT"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NameLabel" type="Label" parent="OnlineNode"]
+anchor_left = -0.2
+margin_left = 290.2
+margin_top = 275.841
+margin_right = 333.2
+margin_bottom = 312.841
+size_flags_horizontal = 4
+size_flags_stretch_ratio = 0.5
+custom_fonts/font = ExtResource( 8 )
+text = "NAME"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PortInput" type="TextEdit" parent="OnlineNode"]
+margin_left = 404.293
+margin_top = 231.414
+margin_right = 604.293
+margin_bottom = 268.414
+size_flags_stretch_ratio = 0.5
+custom_fonts/font = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NameInput" type="TextEdit" parent="OnlineNode"]
+margin_left = 404.293
+margin_top = 272.426
+margin_right = 604.293
+margin_bottom = 309.426
+size_flags_stretch_ratio = 0.5
+custom_fonts/font = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StartOnlineButton" type="Button" parent="OnlineNode"]
+margin_left = 399.596
+margin_top = 341.228
+margin_right = 477.596
+margin_bottom = 384.228
+custom_fonts/font = ExtResource( 8 )
+text = "Launch"
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OnlineBackButton" type="Button" parent="OnlineNode"]
+margin_left = 889.683
+margin_top = 498.742
+margin_right = 976.683
+margin_bottom = 565.742
+custom_fonts/font = SubResource( 4 )
+text = "BACK"
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/BackAnimation = SubResource( 5 )
-anims/StartAnimation = SubResource( 6 )
+anims/BackAnimation = SubResource( 6 )
+anims/OnlineAnimation = SubResource( 8 )
+anims/OnlineBackAnimation = SubResource( 9 )
+anims/StartAnimation = SubResource( 7 )
 [connection signal="pressed" from="StartNode/Quit" to="." method="_on_Quit_pressed"]
 [connection signal="pressed" from="StartNode/Play" to="." method="_on_Play_pressed"]
+[connection signal="pressed" from="StartNode/Online" to="." method="_on_Online_pressed"]
 [connection signal="pressed" from="LevelSelect/Mountain" to="." method="_on_Mountain_pressed"]
 [connection signal="pressed" from="LevelSelect/FireSnake" to="." method="_on_FireSnake_pressed"]
 [connection signal="pressed" from="LevelSelect/ThePitButton" to="." method="_on_ThePitButton_pressed"]
 [connection signal="pressed" from="LevelSelect/Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="OnlineNode/OnlineBackButton" to="." method="_on_OnlineBackButton_pressed"]
