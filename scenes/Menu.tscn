@@ -33,7 +33,7 @@ outline_size = 1
 outline_color = Color( 0, 0.0156863, 1, 1 )
 font_data = ExtResource( 1 )
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=5]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("StartNode:position")
@@ -60,7 +60,7 @@ tracks/1/keys = {
 "values": [ Vector2( 0, 0 ), Vector2( 1024, 0 ) ]
 }
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=6]
 resource_name = "OnlineAnimation"
 length = 0.5
 tracks/0/type = "value"
@@ -88,7 +88,7 @@ tracks/1/keys = {
 "values": [ Vector2( -1024, 0 ), Vector2( 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=9]
+[sub_resource type="Animation" id=7]
 resource_name = "OnlineBackAnimation"
 length = 0.5
 tracks/0/type = "value"
@@ -116,7 +116,7 @@ tracks/1/keys = {
 "values": [ Vector2( 1024, 0 ), Vector2( 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=8]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("StartNode:position")
@@ -420,10 +420,10 @@ __meta__ = {
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/BackAnimation = SubResource( 6 )
-anims/OnlineAnimation = SubResource( 8 )
-anims/OnlineBackAnimation = SubResource( 9 )
-anims/StartAnimation = SubResource( 7 )
+anims/BackAnimation = SubResource( 5 )
+anims/OnlineAnimation = SubResource( 6 )
+anims/OnlineBackAnimation = SubResource( 7 )
+anims/StartAnimation = SubResource( 8 )
 [connection signal="pressed" from="StartNode/Quit" to="." method="_on_Quit_pressed"]
 [connection signal="pressed" from="StartNode/Play" to="." method="_on_Play_pressed"]
 [connection signal="pressed" from="StartNode/Online" to="." method="_on_Online_pressed"]
