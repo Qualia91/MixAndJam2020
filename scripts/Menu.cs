@@ -59,16 +59,6 @@ public class Menu : Node2D
 		animationPlayer.Play("BackAnimation");
 	}
 	
-	private void _on_Online_pressed()
-	{
-		animationPlayer.Play("OnlineAnimation");
-	}
-	
-	private void _on_OnlineBackButton_pressed()
-	{
-		animationPlayer.Play("OnlineBackAnimation");
-	}
-	
 	public void LoadGame()
 	{
 		var saveGame = new File();
